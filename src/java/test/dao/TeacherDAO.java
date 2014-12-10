@@ -30,5 +30,5 @@ public interface TeacherDAO {
     // delete teacher
     public void deleteTeacher(Teacher teacher) throws SQLException;
     // get all tests
-    public List<Test> getAllTests(Long id) throws SQLException;
+    public List<Test> getAllTests(BigInteger id) throws SQLException;
 }

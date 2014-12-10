@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import test.dao.TestDAO;
 import test.panels.Question;
@@ -32,8 +33,11 @@ public class TestDAOImpl implements TestDAO {
                 System.out.println("test.getNumberOfQuestions()= "+test.getNumberOfQuestions());
                 session.getTransaction().commit();
             } catch (Exception e) {
-                e.printStackTrace();
+                
                 System.out.println("Error - addTest");
+                System.out.println(e.getMessage());
+               
+                
             } finally {
                 if (session != null && session.isOpen()) {
                     session.close();
@@ -60,10 +64,16 @@ public class TestDAOImpl implements TestDAO {
       public Test getTestById(BigInteger id) throws SQLException {
             Session session = null;
             Test test = null;
+            Query query = null;
+            List result = null;
             try {
                 System.out.println("NOW_________________________HERE------------------");
                 session = HibernateUtil.getSessionFactory().openSession();
-                test = (Test) session.load(Test.class, id);
+                SQLQuery q = session.createSQLQuery("select * from test where id=:id");
+                query=q.addEntity(test.panels.Test.class);
+                query.setParameter("id", id);
+                result = query.list();
+                test=(Test)result.get(0);
                System.out.println(test.getId()+" --------------NOW_________________________HERE------------------");
             } catch (Exception e) {
                 System.out.println("Error - getTestById");

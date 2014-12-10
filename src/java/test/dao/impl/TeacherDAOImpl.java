@@ -105,15 +105,17 @@ public class TeacherDAOImpl implements TeacherDAO {
             }
       }  
       
-      public List<Test> getAllTests(Long tid) throws SQLException {
+      public List<Test> getAllTests(BigInteger tid) throws SQLException {
             Session session = null;
             Query query = null;
             List result = null;
             List<Test> tests = new ArrayList<Test>();
             try {
                 session = HibernateUtil.getSessionFactory().openSession();
-                query = session.createSQLQuery("select * from Test where teacher_id=:id")
-                        .addEntity(Test.class).setParameter("id", tid);
+               SQLQuery q= session.createSQLQuery("select * from test where teacher_id=:id");
+               query=q.addEntity(test.panels.Test.class);
+               query.setParameter("id", tid);
+                       // .addEntity(Test.class).setParameter("id", tid);
                 result = query.list();
                 
                 for(Iterator iterator = result.iterator(); iterator.hasNext();) {
@@ -122,6 +124,7 @@ public class TeacherDAOImpl implements TeacherDAO {
                 }
             } catch (Exception e) {
                 System.out.println("Error - getAllTests");
+                System.out.println("-----------ERROR!_____ in getAllTests");
             } finally {
                 if (session != null && session.isOpen()) {
                     session.close();

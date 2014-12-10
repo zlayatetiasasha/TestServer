@@ -4,9 +4,16 @@
   <session-factory>
     <property name="hibernate.dialect">org.hibernate.dialect.DerbyDialect</property>
     <property name="hibernate.connection.driver_class">com.mysql.jdbc.Driver</property>
-    <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/testingsrv?zeroDateTimeBehavior=convertToNull</property>
-    <property name="hibernate.connection.username">root</property>
-    <property name="hibernate.connection.password">zlayatetiasasha</property>
+   <!-- <property name="hibernate.connection.url">jdbc:mysql://localhost:3306/testingsrv?zeroDateTimeBehavior=convertToNull</property>-->
+   
+    <property name="hibernate.connection.url">jdbc:mysql://127.7.196.130:3306/testingsrv?zeroDateTimeBehavior=convertToNull</property>
+    
+   <!-- <property name="hibernate.connection.username">root</property>-->
+   <!-- <property name="hibernate.connection.password">zlayatetiasasha</property>-->
+   
+    <property name="hibernate.connection.username">admintrHkvnI</property>
+    <property name="hibernate.connection.password">W48bxvQ5e7sr</property>
+   
     <property name="hibernate.show_sql">true</property>
     <property name="hibernate.current_session_context_class">thread</property>
     <property name="hibernate.query.factory.class">org.hibernate.hql.classis.ClassicQueryTranslatorFactory</property>
@@ -17,6 +24,6 @@
     <mapping class="test.panels.Statistics"/>
     <mapping class="test.panels.Answer"/>
     <mapping class="test.panels.QuestionType"/>
-     <mapping class="test.panels.AnswersStudent"/>
+    <!-- <mapping class="test.panels.AnswersStudent"/>-->
   </session-factory>
 </hibernate-configuration>
