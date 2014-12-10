@@ -31,4 +31,6 @@ public interface TeacherDAO {
     public void deleteTeacher(Teacher teacher) throws SQLException;
     // get all tests
     public List<Test> getAllTests(BigInteger id) throws SQLException;
+    //get teacher by login
+    public Teacher getTeacherByLogin(String login) throws SQLException;
 }

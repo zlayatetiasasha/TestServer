@@ -23,10 +23,10 @@ public class AnswersStudentDAOImpl implements AnswersStudentDAO{
                 session = HibernateUtil.getSessionFactory().openSession();
                 session.beginTransaction();
                 session.save(answ);
-                System.out.println(answ.getAnswers().get(0).getText()+"------------------HERE------");
+                System.out.println(answ.getAnswer().getText()+"------------------HERE------");
                 session.getTransaction().commit();
             } catch (Exception e) {
-                e.printStackTrace();
+                System.out.println(e.getMessage());
                 System.out.println("Error - addAnswersStudent");
             } finally {
                 if (session != null && session.isOpen()) {

@@ -27,5 +27,29 @@ public class TestServiceTeacherImpl extends HessianServlet implements TestServic
         catch (Exception ex) {ex.printStackTrace();}
         
         return tests;
-    }   
+    }  
+    
+     public Teacher getTeacherById(BigInteger teacher_id) {
+     Teacher teacher = null;
+        try {
+            teacher = Factory.getInstance().getTeacherDAO().getTeacherById(teacher_id);
+            
+        }
+        catch (Exception ex) {ex.printStackTrace();}
+        
+        return teacher;
+     }
+     
+     public Teacher getTeacherByLogin(String login) {
+     Teacher teacher = null;
+        try {
+            teacher = Factory.getInstance().getTeacherDAO().getTeacherByLogin(login);
+            
+        }
+        catch (Exception ex) {ex.printStackTrace();}
+        
+        return teacher;
+     }
+    
+    
 }

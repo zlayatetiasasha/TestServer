@@ -124,7 +124,7 @@ public class TestDAOImpl implements TestDAO {
             List<Question> questions = new ArrayList<Question>();
             try {
                 session = HibernateUtil.getSessionFactory().openSession();
-                query = session.createSQLQuery("select * from Question where test_id=:id")
+                query = session.createSQLQuery("select * from question where test_id=:id")
                         .addEntity(Question.class).setParameter("id", tid);
                 result = query.list();
                 

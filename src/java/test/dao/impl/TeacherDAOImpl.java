@@ -171,4 +171,12 @@ public class TeacherDAOImpl implements TeacherDAO {
             }
             return id;
       }
+       
+      
+      public Teacher getTeacherByLogin(String login) throws SQLException{
+      Teacher teacher=null;
+      
+      return teacher;
+      }
+
 }
