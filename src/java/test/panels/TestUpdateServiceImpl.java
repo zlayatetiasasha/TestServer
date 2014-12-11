@@ -21,6 +21,7 @@ public class TestUpdateServiceImpl extends HessianServlet implements TestUpdateS
         boolean temp = false;
         try {
                 Factory.getInstance().getTestDAO().updateTest(test);
+                System.out.println("I've updated test!");
                 temp = true;
             }
         catch (Exception ex) {ex.printStackTrace();}

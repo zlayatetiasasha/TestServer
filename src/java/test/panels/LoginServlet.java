@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         OutputStream outstr = null;
         ObjectOutputStream oos = null;
         System.out.println("HELLO = ");
-        writeLog("HELLO");
+        
         HttpSession session = req.getSession(); 
         boolean temp = false;
         for(int i = 0; i < users.size(); i++) {
@@ -88,50 +88,51 @@ public class LoginServlet extends HttpServlet {
                     response.setContentType("application/x-java-serialized-object");
                     HttpSession session = request.getSession();
                     InputStream in = request.getInputStream();
-                    writeLog("Server is somekind of working\n\r");
+                    
                     ObjectInputStream inputFromApplet = new ObjectInputStream(in);
                     String str = (String) inputFromApplet.readObject();
                     outstr = response.getOutputStream();
                         oos = new ObjectOutputStream(outstr);
-                        oos.writeObject(true);
+                       // oos.writeObject(true);
                     
                     System.out.println(str);
-                    String studentToAdd  = null, teacherToAdd  = null, userToRemove = null, test = null,
+                    String teacherToCheck  = null, teacherToRegister=null, userToRemove = null, test = null,
                             addNewTest=null;
-                    if(str.equals("addTeacher")) teacherToAdd = str;
-                    if(str.equals("addStudent")) studentToAdd = str;
+                    if(str.equals("checkTeacher")) teacherToCheck  = str;
+                    if(str.equals("registerTeacher")) teacherToRegister = str;
                     if(str.equals("removeUser")) userToRemove = str;
                     if(str.equals("test")) test = str; 
                     if(str.equals("addNewTest")) addNewTest=str;
                    System.out.println("I am here");       
-                    if(teacherToAdd != null ) {
+                    if(teacherToCheck != null ) {
                         password = (String) inputFromApplet.readObject();
                         login = (String) inputFromApplet.readObject();
-                        outstr = response.getOutputStream();
-                        oos = new ObjectOutputStream(outstr);
-                        addTeacher(oos, session, password, login);
-                        System.out.println("Teacher is got");
+                     //   outstr = response.getOutputStream();
+                     //   oos = new ObjectOutputStream(outstr);
+                        checkTeacher(oos, session, password, login);
+                        System.out.println("Teacher to check");
                         session.setMaxInactiveInterval(-1);   
                     }
-                    else if(studentToAdd != null ) {
+                    if(teacherToRegister != null ) {
                         password = (String) inputFromApplet.readObject();
                         login = (String) inputFromApplet.readObject();
-                        outstr = response.getOutputStream();
-                        oos = new ObjectOutputStream(outstr);
-                        addStudent(oos, session, password, login);
-                        System.out.println("Student is got");
+                     //   outstr = response.getOutputStream();
+                      //  oos = new ObjectOutputStream(outstr);
+                        registerTeacher(oos, session, password, login);
+                        System.out.println("Teacher to register");
                         session.setMaxInactiveInterval(-1);   
                     }
+                   
                     else if(userToRemove != null) {
-                        outstr = response.getOutputStream();
-                        oos = new ObjectOutputStream(outstr);
+                     //   outstr = response.getOutputStream();
+                    //    oos = new ObjectOutputStream(outstr);
                         System.out.println("userToRemove");
                         removeUser((String) inputFromApplet.readObject());
                         oos.writeObject(true);
                     }                    
                      else if(test != null) {
-                        outstr = response.getOutputStream();
-                        oos = new ObjectOutputStream(outstr);
+                    //    outstr = response.getOutputStream();
+                    //    oos = new ObjectOutputStream(outstr);
                         oos.writeObject(true);
                         System.out.println("Hello i've hot test!");
                     }
@@ -161,38 +162,58 @@ public class LoginServlet extends HttpServlet {
             }
     } 
    
-    public void addTeacher(ObjectOutputStream out, HttpSession session, String login, String password) {
+    public void checkTeacher(ObjectOutputStream out, HttpSession session, String login, String password) {
         
         Teacher teacher = null;
         try {
-            BigInteger id = Factory.getInstance().getTeacherDAO().checkTeacher(login, password);
+            teacher = Factory.getInstance().getTeacherDAO().checkTeacher(login, password);
             System.out.println("I Am checking Teacher");
-            System.out.println("id of teacher= "+id);
-            if (id == null) {
-                Factory.getInstance().getTeacherDAO().addTeacher(new Teacher());
-            }
-            else {
-                teacher = Factory.getInstance().getTeacherDAO().getTeacherById(id);
-            }
             
-            
-            Object value = getServletContext().getAttribute(password);
-            if((value != null && value.getClass().getName().equals("Teacher"))
-                    || id==null) {
-                out.writeObject(null);
-            }
-            else {
+            if(teacher!=null)
+             {
                 getServletContext().setAttribute(password, teacher);
                 users.put(password, session);
-                out.writeObject(teacher);
             }
+            
+                out.writeObject(teacher);
+            
         }
         catch (Exception ex) {ex.printStackTrace();}
         session.setAttribute("inbox", new Inbox());
         session.setAttribute("user", password);
     } 
     
-    public void addStudent(ObjectOutputStream out, HttpSession session, String login, String password) {
+    public void registerTeacher(ObjectOutputStream out, HttpSession session, String login, String password) {
+        
+        Teacher teacher = null;
+        Teacher newTeacherAdded=null;
+        try {
+            teacher = Factory.getInstance().getTeacherDAO().checkTeacher(login, password);
+            
+            if(teacher==null){
+                System.out.println("Teacher, that you want to register, was not found, continue registeing...");
+                LogTeacher log=new LogTeacher(login, password);
+                
+                BigInteger idTeacher=Factory.getInstance().getTeacherDAO().addTeacher(new Teacher());
+                System.out.println("id of added teacher="+idTeacher);
+                newTeacherAdded=new Teacher(idTeacher);
+                log.setTeacher(newTeacherAdded);
+                Factory.getInstance().getTeacherDAO().addLogTeacher(log);
+               
+                getServletContext().setAttribute(password, teacher);
+                users.put(password, session);
+                
+            }
+                out.writeObject(newTeacherAdded);
+            
+        }
+        catch (Exception ex) {ex.printStackTrace();}
+        session.setAttribute("inbox", new Inbox());
+        session.setAttribute("user", password);
+        
+    } 
+    
+   /* public void addStudent(ObjectOutputStream out, HttpSession session, String login, String password) {
         Student student = null;
         try {
             Long id = Factory.getInstance().getStudentDAO().checkStudent(login, password);
@@ -216,42 +237,13 @@ public class LoginServlet extends HttpServlet {
         session.setAttribute("inbox", new Inbox());
         session.setAttribute("user", password);
     }
-    
+    */
     public void removeUser(String user) {
         users.remove(user);
         System.out.println("removeUser");
         
     }
-    
-    
-    public static void writeLog( String text) {
-    //Определяем файл
-    File file = new File("C:\\Users\\hp\\logServer.txt");
- 
-    try {
-        //проверяем, что если файл не существует то создаем его
-        if(!file.exists()){
-            file.createNewFile();
-        }
- 
-        //PrintWriter обеспечит возможности записи в файл
-        PrintWriter out = new PrintWriter(file.getAbsoluteFile());
- 
-        try {
-            //Записываем текст у файл
-            out.append(text);
-        } finally {
-            //После чего мы должны закрыть файл
-            //Иначе файл не запишется
-            out.close();
-        }
-    } catch(IOException e) {
-        throw new RuntimeException(e);
-    }
-}
-    
-    
-    
+        
     
         class Inbox extends Vector  implements Serializable {
 

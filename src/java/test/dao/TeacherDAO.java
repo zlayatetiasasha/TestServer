@@ -9,6 +9,7 @@ import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.List;
 import test.panels.Answer;
+import test.panels.LogTeacher;
 import test.panels.Teacher;
 import test.panels.Test;
 
@@ -18,9 +19,9 @@ import test.panels.Test;
  */
 public interface TeacherDAO {
     // add student
-    public BigInteger checkTeacher(String login, String password) throws SQLException;
+    public Teacher checkTeacher(String login, String password) throws SQLException;
     // add teacher
-    public void addTeacher(Teacher teacher) throws SQLException;  
+    public BigInteger addTeacher(Teacher teacher) throws SQLException;  
     // update teacher
     public void updateTeacher(Teacher teacher) throws SQLException;
     // get teacher by id
@@ -33,4 +34,6 @@ public interface TeacherDAO {
     public List<Test> getAllTests(BigInteger id) throws SQLException;
     //get teacher by login
     public Teacher getTeacherByLogin(String login) throws SQLException;
+    //adding new LogTeacher for Teacher
+    public void addLogTeacher(LogTeacher log);
 }

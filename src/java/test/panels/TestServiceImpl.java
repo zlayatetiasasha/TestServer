@@ -36,7 +36,7 @@ public class TestServiceImpl extends HessianServlet implements TestService
             {
                 t = Factory.getInstance().getTestDAO().getTestById(id);
                 //temp = t;
-                System.out.println("I've got the test to get= "+t.getId()+" "+t.getNumberOfQuestions());
+                
             }
             catch (Exception ex) {ex.printStackTrace();}
         return t;

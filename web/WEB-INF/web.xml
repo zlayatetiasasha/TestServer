@@ -24,6 +24,23 @@
     <servlet-class>test.panels.TestServiceTeacherImpl</servlet-class>
     </servlet>
     
+     <servlet>
+    <servlet-name>TestStudentServiceImpl</servlet-name>
+    <servlet-class>test.panels.TestStudentServiceImpl</servlet-class>
+    </servlet>
+    
+    <servlet>
+    <servlet-name>TestUpdateServiceImpl</servlet-name>
+    <servlet-class>test.panels.TestUpdateServiceImpl</servlet-class>
+    </servlet>
+    
+    
+    
+    
+    
+    
+    
+    
   <servlet-mapping>
     <servlet-name>LoginServlet</servlet-name>
     <url-pattern>/LoginServlet</url-pattern>
@@ -37,6 +54,16 @@
   <servlet-mapping>
     <servlet-name>TestServiceTeacherImpl</servlet-name>
     <url-pattern>/TestServiceTeacherImpl</url-pattern>
+  </servlet-mapping>
+  
+  <servlet-mapping>
+    <servlet-name>TestStudentServiceImpl</servlet-name>
+    <url-pattern>/TestStudentServiceImpl</url-pattern>
+  </servlet-mapping>
+
+<servlet-mapping>
+    <servlet-name>TestUpdateServiceImpl</servlet-name>
+    <url-pattern>/TestUpdateServiceImpl</url-pattern>
   </servlet-mapping>
 
  

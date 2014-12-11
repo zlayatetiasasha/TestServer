@@ -5,6 +5,7 @@
  */
 package test.dao.impl;
 
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -22,13 +23,14 @@ import test.util.HibernateUtil;
  */
 public class StudentDAOImpl implements StudentDAO {
     
-    public void addStudent(Student stud) throws SQLException {
+    public Student addStudent(Student stud) throws SQLException {
             Session session = null;
             try {
                 session = HibernateUtil.getSessionFactory().openSession();
                 session.beginTransaction();
                 session.save(stud);
                 session.getTransaction().commit();
+                return stud;
             } catch (Exception e) {
                 System.out.println("Error - addStudent");
             } finally {
@@ -36,6 +38,7 @@ public class StudentDAOImpl implements StudentDAO {
                     session.close();
                 }
             }
+            return null;
       }
 
       public void updateStudent(Student stud) throws SQLException {
@@ -54,7 +57,7 @@ public class StudentDAOImpl implements StudentDAO {
             }
       }
 
-      public Student getStudentById(Long id) throws SQLException {
+      public Student getStudentById(BigInteger id) throws SQLException {
             Session session = null;
             Student stud = null;
             try {

@@ -4,6 +4,7 @@
  * and open the template in the editor.
  */
 package test.dao;
+import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.List;
 import test.panels.Student;
@@ -16,11 +17,11 @@ public interface StudentDAO {
     // add student
     public Long checkStudent(String login, String password) throws SQLException;
     // add student
-    public void addStudent(Student student) throws SQLException;  
+    public Student addStudent(Student student) throws SQLException;  
     // update student
     public void updateStudent(Student student) throws SQLException;
     // get student by id
-    public Student getStudentById(Long id) throws SQLException;    
+    public Student getStudentById(BigInteger id) throws SQLException;    
     // get all students
     public List<Student> getAllStudents() throws SQLException;        
     // delete student
