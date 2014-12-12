@@ -26,10 +26,11 @@ public class TestServiceTeacherImpl extends HessianServlet implements TestServic
             
             if (temp != null && !temp.isEmpty()) {
                 tests = temp.toArray(new Test[temp.size()]);
+                for(int i=0;i<tests.length;i++)
+                System.out.println(tests[i].getTitle());
             }
             
-            for(int i=0;i<tests.length;i++)
-            System.out.println(tests[i].getTitle());
+            
 
            /* Teacher t = getTeacherById(teacher_id);
             if (t != null) {

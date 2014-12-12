@@ -161,4 +161,36 @@ public class TestDAOImpl implements TestDAO {
         }
         return questions;
     }
+
+    
+    public Test getAllQuestionsForTest(Test test) throws SQLException {
+    Session session = null;
+        Query query = null;
+        List result = null;
+        List<Question> questions = new ArrayList<Question>();
+        try {
+            session = HibernateUtil.getSessionFactory().openSession();
+            query = session.createSQLQuery("select * from question where test_id=:id")
+                    .addEntity(Question.class).setParameter("id", test.getId());
+            result = query.list();
+
+            for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+                Question question = (Question) iterator.next();
+                 Hibernate.initialize(question);
+                questions.add(question);
+               
+            }
+            test.setQuestions(questions);
+        } catch (Exception e) {
+            System.out.println("Error - getAllQuestions");
+        } finally {
+            if (session != null && session.isOpen()) {
+               session.close();
+            }
+        }
+        return test;
+    
+    }
+
+
 }

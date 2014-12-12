@@ -30,4 +30,6 @@ public interface TestDAO {
     public List<Question> getAllQuestions(Long id) throws SQLException;
     // find test
     // public List<Test> findTest(Long id) throws SQLException;
+    //For Test object
+    public Test getAllQuestionsForTest(Test test) throws SQLException; 
 }

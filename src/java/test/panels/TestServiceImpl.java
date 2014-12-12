@@ -15,47 +15,56 @@ import java.util.Iterator;
 import java.util.List;
 import test.dao.Factory;
 
-public class TestServiceImpl extends HessianServlet implements TestService
-{
-   public boolean addTest(Test t){ 
+public class TestServiceImpl extends HessianServlet implements TestService {
+
+    public boolean addTest(Test t) {
         boolean temp = false;
-            try
-            {
-                System.out.println("try to add test...");
-                Factory.getInstance().getTestDAO().addTest(t);
-                temp = true;
-                System.out.println("I've got the test to add");
-            }
-            catch (Exception ex) {ex.printStackTrace();}
+        try {
+            System.out.println("try to add test...");
+            Factory.getInstance().getTestDAO().addTest(t);
+            temp = true;
+            System.out.println("I've got the test to add");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return temp;
     }
-   
-   public Test getTestById(BigInteger id){ 
+
+    public Test getTestById(BigInteger id) {
         boolean temp = false;
-        Test t=null;
-            try
-            {
-                t = Factory.getInstance().getTestDAO().getTestById(id);
-                //temp = t;
-                
-            }
-            catch (Exception ex) {ex.printStackTrace();}
+        Test t = null;
+        try {
+            t = Factory.getInstance().getTestDAO().getTestById(id);
+            //temp = t;
+
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return t;
     }
-   
-   public boolean addAnswersStudent(AnswersStudent answs){
+
+    public boolean addAnswersStudent(AnswersStudent answs) {
         boolean temp = false;
-            try
-            {
-                Factory.getInstance().getAnswersStudentDAO().addAnswersStudent(answs);
-                temp = true;
-                System.out.println("I've got the answs test to add");
-            }
-            catch (Exception ex) {ex.printStackTrace();}
+        try {
+            Factory.getInstance().getAnswersStudentDAO().addAnswersStudent(answs);
+            temp = true;
+            System.out.println("I've got the answs test to add");
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
         return temp;
-  
-   }
-   
+
+    }
+
+    public Test getTestWithQuestions(Test test) {
+        Test newtest = null;
+        try {
+            newtest = test;
+            Test t = Factory.getInstance().getTestDAO().getAllQuestionsForTest(test);           
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+        return test;
+    }
 
 }
-

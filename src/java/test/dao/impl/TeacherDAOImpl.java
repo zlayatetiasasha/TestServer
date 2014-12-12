@@ -11,15 +11,23 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import org.hibernate.Criteria;
+import org.hibernate.FetchMode;
 import org.hibernate.Hibernate;
 import org.hibernate.Query;
 import org.hibernate.SQLQuery;
 import org.hibernate.Session;
+
 import test.dao.TeacherDAO;
 import test.panels.LogTeacher;
 import test.panels.Teacher;
 import test.panels.Test;
 import test.util.HibernateUtil;
+import org.hibernate.criterion.Criterion;
+import org.hibernate.criterion.Expression;
+import org.hibernate.criterion.Restrictions;
+import test.panels.Answer;
+import test.panels.Question;
 
 /**
  *
@@ -125,37 +133,48 @@ public class TeacherDAOImpl implements TeacherDAO {
             System.out.println("TeacherDAOImpl in getAllTests");
 
             session = HibernateUtil.getSessionFactory().openSession();
-            SQLQuery q = session.createSQLQuery("select * from test where teacher_id=:id ");
-            query = q.addEntity(test.panels.Test.class);
-            query.setParameter("id", tid);
-            // .addEntity(Test.class).setParameter("id", tid);
-            result = query.list();
+            Criteria cats = session.createCriteria(Test.class)
+                    .add(Restrictions.eq("teacher.id", tid))
+                    .setFetchMode("questions", FetchMode.JOIN);
+            if (cats != null) {
 
-            if (result != null && !result.isEmpty()) {
-
-                for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-                    Hibernate.initialize(iterator.next());
-
-                }
-                for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-                    Test test = (Test) (iterator.next());
-                    tests.add(test);
-                    Hibernate.initialize(test);
-                    Hibernate.initialize(test.getQuestions().size());
-                    
-                    
-                }
-
-                if (!tests.isEmpty()) {
-                    System.out.println(tests.get(0));
-                    System.out.println("teacher=" + tests.get(0).getTeacher());
-                    tests.get(0).getTeacher().setTests(tests);
-                }
+                List<Test> l = cats.list();
+                tests = l;
+                System.out.println("tests.size()"+tests.size());
+                Hibernate.initialize(tests);
 
             }
+
+            if (!tests.isEmpty() && tests.size() > 0) {
+                tests.get(0).getTeacher().setTests(tests);
+                System.out.println("tests.get(0).getTeacher()"+tests.get(0).getTeacher());
+            }
+
+            /*     SQLQuery q = session.createSQLQuery("select * from test where teacher_id=:id ");
+             query = q.addEntity(test.panels.Test.class);
+             query.setParameter("id", tid);*/
+            // .addEntity(Test.class).setParameter("id", tid);
+            // result = query.list();
+
+            /*   if (result != null && !result.isEmpty()) {
+
+             for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+             Hibernate.initialize(iterator.next());
+
+             }
+             for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+             Test test = (Test) (iterator.next());
+             tests.add(test);
+             Hibernate.initialize(test);
+             Hibernate.initialize(test.getQuestions().size());
+                    
+                    
+             }
+             */
         } catch (Exception e) {
             System.out.println("Error - getAllTests");
             System.out.println("-----------ERROR!_____ in getAllTests");
+            e.printStackTrace();
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
