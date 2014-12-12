@@ -16,6 +16,7 @@ import org.hibernate.SQLQuery;
 import org.hibernate.Session;
 import test.dao.TestDAO;
 import test.panels.Question;
+import test.panels.Teacher;
 import test.panels.Test;
 import test.util.HibernateUtil;
 
@@ -24,6 +25,7 @@ import test.util.HibernateUtil;
  * @author Asus
  */
 public class TestDAOImpl implements TestDAO {
+//static Session session=HibernateUtil.getSessionFactory().openSession();
 
     public void addTest(Test test) throws SQLException {
         Session session = null;
@@ -31,8 +33,15 @@ public class TestDAOImpl implements TestDAO {
             session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
             session.save(test);
-            System.out.println("test.getNumberOfQuestions()= " + test.getNumberOfQuestions());
+            session.update(test);
             session.getTransaction().commit();
+           
+
+            /*Hibernate.initialize(test);
+             Teacher teacher = test.getTeacher();
+             List<Test>tests= teacher.getTests();
+             tests.add(test);
+             */
         } catch (Exception e) {
 
             System.out.println("Error - addTest");
@@ -41,6 +50,7 @@ public class TestDAOImpl implements TestDAO {
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
+
             }
         }
     }
@@ -68,7 +78,7 @@ public class TestDAOImpl implements TestDAO {
         List result = null;
         try {
             System.out.println("NOW_________________________HERE------------------");
-            session = HibernateUtil.getSessionFactory().openSession();
+           session = HibernateUtil.getSessionFactory().openSession();
             SQLQuery q = session.createSQLQuery("select * from test where id=:id");
 
             if (q != null) {
@@ -77,11 +87,11 @@ public class TestDAOImpl implements TestDAO {
                 result = query.list();
                 System.out.println("result=" + result);
             }
-            if (result != null&&!result.isEmpty()) {
+            if (result != null && !result.isEmpty()) {
                 test = (Test) result.get(0);
                 Hibernate.initialize(test);
             }
-            
+
         } catch (Exception e) {
 
             System.out.println("Error - getTestById");
@@ -98,8 +108,9 @@ public class TestDAOImpl implements TestDAO {
         Session session = null;
         List<Test> tests = new ArrayList<Test>();
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+           session = HibernateUtil.getSessionFactory().openSession();
             tests = session.createCriteria(Test.class).list();
+            Hibernate.initialize(tests);
         } catch (Exception e) {
             System.out.println("Error - getAllTests");
         } finally {
@@ -113,7 +124,7 @@ public class TestDAOImpl implements TestDAO {
     public void deleteTest(Test test) throws SQLException {
         Session session = null;
         try {
-            session = HibernateUtil.getSessionFactory().openSession();
+           session = HibernateUtil.getSessionFactory().openSession();
             session.beginTransaction();
             session.delete(test);
             session.getTransaction().commit();
@@ -145,7 +156,7 @@ public class TestDAOImpl implements TestDAO {
             System.out.println("Error - getAllQuestions");
         } finally {
             if (session != null && session.isOpen()) {
-                session.close();
+               session.close();
             }
         }
         return questions;

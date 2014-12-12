@@ -21,6 +21,7 @@ public class TestServiceImpl extends HessianServlet implements TestService
         boolean temp = false;
             try
             {
+                System.out.println("try to add test...");
                 Factory.getInstance().getTestDAO().addTest(t);
                 temp = true;
                 System.out.println("I've got the test to add");

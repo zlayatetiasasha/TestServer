@@ -26,7 +26,7 @@ import test.util.HibernateUtil;
  * @author Asus
  */
 public class TeacherDAOImpl implements TeacherDAO {
-    
+
     public BigInteger addTeacher(Teacher teach) throws SQLException {
         Session session = null;
         BigInteger t = null;
@@ -35,9 +35,9 @@ public class TeacherDAOImpl implements TeacherDAO {
             session.beginTransaction();
             System.out.println("Adding teacher beginTransaction()=");
             t = (BigInteger) session.save(teach);
-            
+
             System.out.println("Adding teacher id=" + t);
-            
+
             session.getTransaction().commit();
         } catch (Exception e) {
             System.out.println("Error - addTeacher");
@@ -49,7 +49,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
         return t;
     }
-    
+
     public void updateTeacher(Teacher teach) throws SQLException {
         Session session = null;
         try {
@@ -65,7 +65,7 @@ public class TeacherDAOImpl implements TeacherDAO {
             }
         }
     }
-    
+
     public Teacher getTeacherById(BigInteger id) throws SQLException {
         Session session = null;
         Teacher teach = null;
@@ -82,7 +82,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
         return teach;
     }
-    
+
     public List<Teacher> getAllTeachers() throws SQLException {
         Session session = null;
         List<Teacher> teachs = new ArrayList<Teacher>();
@@ -98,7 +98,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
         return teachs;
     }
-    
+
     public void deleteTeacher(Teacher teach) throws SQLException {
         Session session = null;
         try {
@@ -113,8 +113,9 @@ public class TeacherDAOImpl implements TeacherDAO {
                 session.close();
             }
         }
-    }    
-    
+    }
+
+    //static Session session=HibernateUtil.getSessionFactory().openSession(); 
     public List<Test> getAllTests(BigInteger tid) throws SQLException {
         Session session = null;
         Query query = null;
@@ -122,21 +123,35 @@ public class TeacherDAOImpl implements TeacherDAO {
         List<Test> tests = new ArrayList<Test>();
         try {
             System.out.println("TeacherDAOImpl in getAllTests");
-            
+
             session = HibernateUtil.getSessionFactory().openSession();
-            SQLQuery q = session.createSQLQuery("select * from test where teacher_id=:id");
+            SQLQuery q = session.createSQLQuery("select * from test where teacher_id=:id ");
             query = q.addEntity(test.panels.Test.class);
             query.setParameter("id", tid);
             // .addEntity(Test.class).setParameter("id", tid);
             result = query.list();
-            
+
             if (result != null && !result.isEmpty()) {
+
                 for (Iterator iterator = result.iterator(); iterator.hasNext();) {
-                    Test test = (Test) iterator.next();
-                    Hibernate.initialize(test);
-                    tests.add(test);
+                    Hibernate.initialize(iterator.next());
+
                 }
-                
+                for (Iterator iterator = result.iterator(); iterator.hasNext();) {
+                    Test test = (Test) (iterator.next());
+                    tests.add(test);
+                    Hibernate.initialize(test);
+                    Hibernate.initialize(test.getQuestions().size());
+                    
+                    
+                }
+
+                if (!tests.isEmpty()) {
+                    System.out.println(tests.get(0));
+                    System.out.println("teacher=" + tests.get(0).getTeacher());
+                    tests.get(0).getTeacher().setTests(tests);
+                }
+
             }
         } catch (Exception e) {
             System.out.println("Error - getAllTests");
@@ -144,6 +159,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         } finally {
             if (session != null && session.isOpen()) {
                 session.close();
+
             }
         }
         return tests;
@@ -160,24 +176,24 @@ public class TeacherDAOImpl implements TeacherDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             SQLQuery q = session.createSQLQuery("select * from logteacher where login=:l and password=:p");
-            
+
             query = q.addEntity(test.panels.LogTeacher.class);
             query.setParameter("l", login);
             query.setParameter("p", password);
-            
+
             System.out.println(login + " " + password);
             System.out.println("query=" + query);
-            
+
             if (query != null) {
                 result = query.list();
             }
-            
+
             if (result != null && !result.isEmpty()) {
                 log_teacher = (LogTeacher) result.get(0);
                 id = log_teacher.getId();
                 teacher = log_teacher.getTeacher();
             }
-            
+
             System.out.println("teacher found= " + id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -201,23 +217,23 @@ public class TeacherDAOImpl implements TeacherDAO {
         try {
             session = HibernateUtil.getSessionFactory().openSession();
             SQLQuery q = session.createSQLQuery("select * from logteacher where login=:l");
-            
+
             query = q.addEntity(test.panels.LogTeacher.class);
             query.setParameter("l", login);
-            
+
             System.out.println("query=" + query);
-            
+
             if (query != null) {
                 result = query.list();
             }
-            
+
             if (result != null) {
                 log_teacher = (LogTeacher) result.get(0);
                 Hibernate.initialize(log_teacher);
                 id = log_teacher.getId();
                 teacher = log_teacher.getTeacher();
             }
-            
+
             System.out.println("teacher found= " + id);
         } catch (Exception e) {
             e.printStackTrace();
@@ -229,7 +245,7 @@ public class TeacherDAOImpl implements TeacherDAO {
         }
         return teacher;
     }
-    
+
     public void addLogTeacher(LogTeacher log) {
         Session session = null;
         try {
@@ -245,5 +261,5 @@ public class TeacherDAOImpl implements TeacherDAO {
             }
         }
     }
-    
+
 }

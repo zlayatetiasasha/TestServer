@@ -23,13 +23,17 @@ public class TestServiceTeacherImpl extends HessianServlet implements TestServic
         try {
             System.out.println("TestServiceTeacherImpl - I am in getTeacherTests!");
             temp = Factory.getInstance().getTeacherDAO().getAllTests(teacher_id);
+            
             if (temp != null && !temp.isEmpty()) {
                 tests = temp.toArray(new Test[temp.size()]);
             }
+            
+            for(int i=0;i<tests.length;i++)
+            System.out.println(tests[i].getTitle());
 
-            Teacher t = getTeacherById(teacher_id);
+           /* Teacher t = getTeacherById(teacher_id);
             if (t != null) {
-                Hibernate.initialize(t);
+                
                 System.out.println("teacher=" + t.getId());
                 if (tests != null) {
                     for (int i = 0; i < tests.length; i++) {
@@ -38,7 +42,7 @@ public class TestServiceTeacherImpl extends HessianServlet implements TestServic
 
                     t.setTests(temp);
                 }
-            }
+            }*/
         } catch (Exception ex) {
             ex.printStackTrace();
         }
